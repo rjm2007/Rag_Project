@@ -3,10 +3,12 @@ from Semantic_splitter import Semantic_split
 from Astra_db import vector_database_creation
 from prompt_llm import format_docs, generate_response
 from collections import defaultdict
+from docx import Document
+doc = Document()
 import pprint
 
 # === Load PDF ===
-pdf_path = "2203.01017v2.pdf"  # ✅ Update with your actual file path
+pdf_path = "Rag_Project\llama.pdf"  # ✅ Update with your actual file path
 all_docs = extract_from_pdf(pdf_path)
 print("Docs Loadeddd !!!")
 
@@ -26,9 +28,14 @@ reteriver = vector_store.as_retriever(
 # relevant_docs = format_docs(relevant_chunks)
 
 rag_chain = generate_response(retriever=reteriver)
-answer=rag_chain.invoke("What is TabelFormer")
+query = input("Enter your query ")
+answer=rag_chain.invoke(query)
 
-print(answer)
+print("\n\nResponse Generate Suceessfully")
+
+doc.add_heading(f"Q: {query}", level=1)
+doc.add_paragraph(answer)
+doc.save("rag_output.docx")
 
 
 
